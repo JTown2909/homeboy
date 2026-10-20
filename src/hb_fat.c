@@ -114,6 +114,9 @@ static class_type_t hb_fat_class = {
 
 void run_command()
 {
+    /* err reports this command only, not one that failed earlier */
+    errno = 0;
+
     switch(hb_fat_obj->command)
     {
         case SYS_OPEN:
@@ -135,6 +138,7 @@ void run_command()
         case SYS_CLOSE_DIR:
         {
             *(int*)get_n64_buf = closedir(hb_fat_obj->close_dir.dir);
+            break;
         }
         case SYS_READ_DIR:
         {
