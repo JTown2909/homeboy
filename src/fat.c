@@ -1829,9 +1829,12 @@ int fat_init(fat_ctxt_t *fat){
         fat->cache[i].valid = 0;
         fat->cache[i].max_lba = -1;
     }
+    int e = errno;
     if(find_partition(fat)){
+        /* no partition table (e.g. dolphin's sd card image): the volume starts at sector 0 */
         fat->partition_lba = 0;
         fat->partition_sectors = 0;
+        errno = e;
     }
     void *partition = cache_load(fat, FAT_CACHE_DATA, fat->partition_lba);
     fat->bytes_per_sector = get_word(partition, 0xB, 2);
